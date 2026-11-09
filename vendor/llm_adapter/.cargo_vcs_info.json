@@ -1,0 +1,6 @@
+{
+  "git": {
+    "sha1": "1fd2e9a7b2756c83e8f7d40277536529c0b34b73"
+  },
+  "path_in_vcs": "crates/llm_adapter"
+}
