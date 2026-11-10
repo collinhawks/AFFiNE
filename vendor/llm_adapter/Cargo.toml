@@ -125,3 +125,7 @@ version = "2.5"
 
 [dependencies.zeroize]
 version = "1.8"
+
+[[test]]
+name = "gemini_signature"
+path = "tests/gemini_signature.rs"
