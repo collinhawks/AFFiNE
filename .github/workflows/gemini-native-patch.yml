@@ -46,6 +46,8 @@ jobs:
           cargo test -p llm_adapter --test gemini_signature
 
       - name: Build AFFiNE native addon
+        env:
+          AFFINE_PRO_PUBLIC_KEY: ${{ secrets.AFFINE_PRO_PUBLIC_KEY }}
         run: |
           cargo build \
             --release \
