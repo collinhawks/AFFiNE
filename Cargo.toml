@@ -138,3 +138,6 @@ strip         = "symbols"
   # [patch.crates-io]
   # llm_adapter = { path = "../llm_adapter/crates/llm_adapter" }
   # llm_runtime = { path = "../llm_adapter/crates/llm_runtime" }
+
+[patch.crates-io]
+llm_adapter = { path = "vendor/llm_adapter" }
