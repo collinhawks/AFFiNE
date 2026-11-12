@@ -1,0 +1,64 @@
+name: Build Canary self-hosted native addon
+
+on:
+  push:
+    branches:
+      - build/canary-2026.11.11-selfhost
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 120
+
+    env:
+      CARGO_BUILD_JOBS: "2"
+      CARGO_INCREMENTAL: "0"
+      CARGO_PROFILE_RELEASE_LTO: "false"
+      CARGO_PROFILE_RELEASE_CODEGEN_UNITS: "8"
+      CARGO_PROFILE_RELEASE_OPT_LEVEL: "2"
+
+    steps:
+      - name: Check out patched AFFiNE
+        uses: actions/checkout@v4
+
+      - name: Set up Rust
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          toolchain: "1.97.1"
+          targets: x86_64-unknown-linux-gnu
+
+      - name: Install build dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            clang libclang-dev cmake pkg-config libssl-dev
+
+      - name: Build AFFiNE native addon
+        env:
+          AFFINE_PRO_PUBLIC_KEY: ${{ secrets.AFFINE_PRO_PUBLIC_KEY }}
+        run: |
+          test -n "$AFFINE_PRO_PUBLIC_KEY" || { echo "Public key missing"; exit 1; }
+
+          cargo build \
+            --release \
+            --package affine_server_native \
+            --target x86_64-unknown-linux-gnu
+
+          mkdir -p artifact
+
+          cp \
+            target/x86_64-unknown-linux-gnu/release/libaffine_server_native.so \
+            artifact/server-native.x64.node
+
+          file artifact/server-native.x64.node
+
+      - name: Upload patched addon
+        uses: actions/upload-artifact@v4
+        with:
+          name: canary-2026.11.11-server-native-x64
+          path: artifact/server-native.x64.node
+          if-no-files-found: error
