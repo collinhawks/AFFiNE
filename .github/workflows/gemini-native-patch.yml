@@ -3,7 +3,7 @@ name: Build Canary Gemini-patched native addon
 on:
   push:
     branches:
-      - fix/gemini-signatures-canary-2026.11.11
+      - fix/gemini-signatures-canary-2026.11.13
   workflow_dispatch:
 
 permissions:
@@ -67,6 +67,6 @@ jobs:
       - name: Upload patched addon
         uses: actions/upload-artifact@v4
         with:
-          name: canary-2026.11.11-gemini-patched-x64
+          name: canary-2026.11.13-gemini-patched-x64
           path: artifact/server-native.x64.node
           if-no-files-found: error
